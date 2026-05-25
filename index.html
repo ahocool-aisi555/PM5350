@@ -262,45 +262,50 @@
         arc.style.strokeDashoffset = offset;
     }
 
-    // --- PROSES MENERIMA DATA DARI WEMOS ---
-    client.on('message', (receivedTopic, payload) => {
-        if(receivedTopic === topic) {
-            try {
-                // Parsing data string JSON mentah dari Wemos
-                const data = JSON.parse(payload.toString());
-                const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+// --- PROSES MENERIMA DATA DARI WEMOS / SIMULATOR ---
+client.on('message', (receivedTopic, payload) => {
+    if(receivedTopic === topic) {
+        try {
+            const data = JSON.parse(payload.toString());
+            const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-                // 1. Perbarui Semua Meter Analog (Gauge)
-                updateGauge('arc-va', 'txt-va', data.v_a, 300, 'V');
-                updateGauge('arc-vb', 'txt-vb', data.v_b, 300, 'V');
-                updateGauge('arc-vc', 'txt-vc', data.v_c, 300, 'V');
-                
-                updateGauge('arc-ia', 'txt-ia', data.i_a, 10, 'A'); // Asumsi CT maks 10A, sesuaikan kebutuhan
-                updateGauge('arc-ib', 'txt-ib', data.i_b, 10, 'A');
-                updateGauge('arc-ic', 'txt-ic', data.i_c, 10, 'A');
+            // 1. Perbarui Semua Meter Analog (Gauge)
+            updateGauge('arc-va', 'txt-va', data.v_a, 300, 'V');
+            updateGauge('arc-vb', 'txt-vb', data.v_b, 300, 'V');
+            updateGauge('arc-vc', 'txt-vc', data.v_c, 300, 'V');
+            
+            updateGauge('arc-ia', 'txt-ia', data.i_a, 10, 'A'); 
+            updateGauge('arc-ib', 'txt-ib', data.i_b, 10, 'A');
+            updateGauge('arc-ic', 'txt-ic', data.i_c, 10, 'A');
 
-                // 2. Perbarui Tren Grafik Sejarah (Line Chart)
-                // Tambah data baru ke Chart Tegangan
-                if(chartV.data.labels.length >= maxDataPoints) { chartV.data.labels.shift(); chartV.data.datasets.forEach(d => d.data.shift()); }
-                chartV.data.labels.push(now);
-                chartV.data.datasets[0].data.push(data.v_a);
-                chartV.data.datasets[1].data.push(data.v_b);
-                chartV.data.datasets[2].data.push(data.v_c);
-                chartV.data.update();
-
-                // Tambah data baru ke Chart Arus
-                if(chartI.data.labels.length >= maxDataPoints) { chartI.data.labels.shift(); chartI.data.datasets.forEach(d => d.data.shift()); }
-                chartI.data.labels.push(now);
-                chartI.data.datasets[0].data.push(data.i_a);
-                chartI.data.datasets[1].data.push(data.i_b);
-                chartI.data.datasets[2].data.push(data.i_c);
-                chartI.data.update();
-
-            } catch (e) {
-                console.error("Gagal membaca struktur teks JSON:", e);
+            // 2. Perbarui Tren Grafik Sejarah (Line Chart)
+            // Tambah data baru ke Chart Tegangan
+            if(chartV.data.labels.length >= maxDataPoints) { 
+                chartV.data.labels.shift(); 
+                chartV.data.datasets.forEach(d => d.data.shift()); 
             }
+            chartV.data.labels.push(now);
+            chartV.data.datasets[0].data.push(data.v_a);
+            chartV.data.datasets[1].data.push(data.v_b);
+            chartV.data.datasets[2].data.push(data.v_c);
+            chartV.update(); //  Perbaikan di sini (hapus .data)
+
+            // Tambah data baru ke Chart Arus
+            if(chartI.data.labels.length >= maxDataPoints) { 
+                chartI.data.labels.shift(); 
+                chartI.data.datasets.forEach(d => d.data.shift()); 
+            }
+            chartI.data.labels.push(now);
+            chartI.data.datasets[0].data.push(data.i_a);
+            chartI.data.datasets[1].data.push(data.i_b);
+            chartI.data.datasets[2].data.push(data.i_c);
+            chartI.update(); //  Perbaikan di sini (hapus .data)
+
+        } catch (e) {
+            console.error("Gagal membaca struktur teks JSON:", e);
         }
-    });
+    }
+});
 </script>
 </body>
 </html>
