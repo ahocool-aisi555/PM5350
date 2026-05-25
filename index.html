@@ -270,9 +270,9 @@ client.on('message', (receivedTopic, payload) => {
             const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
             // 1. Perbarui Semua Meter Analog (Gauge)
-            updateGauge('arc-va', 'txt-va', data.v_a, 300, 'V');
-            updateGauge('arc-vb', 'txt-vb', data.v_b, 300, 'V');
-            updateGauge('arc-vc', 'txt-vc', data.v_c, 300, 'V');
+            updateGauge('arc-va', 'txt-va', data.v_a, 400, 'V');
+            updateGauge('arc-vb', 'txt-vb', data.v_b, 400, 'V');
+            updateGauge('arc-vc', 'txt-vc', data.v_c, 400, 'V');
             
             updateGauge('arc-ia', 'txt-ia', data.i_a, 10, 'A'); 
             updateGauge('arc-ib', 'txt-ib', data.i_b, 10, 'A');
