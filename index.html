@@ -175,11 +175,11 @@
 
     <div class="grid-chart">
         <div class="card">
-            <h3>Tren Sejarah Tegangan (V)</h3>
+            <h3>Tren  Tegangan (V)</h3>
             <canvas id="chartTegangan"></canvas>
         </div>
         <div class="card">
-            <h3>Tren Sejarah Arus (A)</h3>
+            <h3>Tren  Arus (A)</h3>
             <canvas id="chartArus"></canvas>
         </div>
     </div>
@@ -278,7 +278,7 @@ client.on('message', (receivedTopic, payload) => {
             updateGauge('arc-ib', 'txt-ib', data.i_b, 10, 'A');
             updateGauge('arc-ic', 'txt-ic', data.i_c, 10, 'A');
 
-            // 2. Perbarui Tren Grafik Sejarah (Line Chart)
+            // 2. Perbarui Tren Grafik  (Line Chart)
             // Tambah data baru ke Chart Tegangan
             if(chartV.data.labels.length >= maxDataPoints) { 
                 chartV.data.labels.shift(); 
